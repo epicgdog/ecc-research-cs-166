@@ -1,0 +1,111 @@
+# we use INF as a special Elliptic Curve zero point 
+INF = None
+
+
+# elliptic curve, where y^2 = x^3 + ax + b
+# p defines the finite field
+class Curve:
+
+    def __init__(self, p, a, b):
+        self.p = p
+        self.a = a
+        self.b = b
+
+
+# uses the extended euclidean algorithm
+def mod_inverse(value, p):
+
+    value %= p
+    if value == 0:
+        return -1
+
+    old_r, r = value, p
+    old_s, s = 1, 0
+
+    while r:
+        quotient = old_r // r
+        old_r, r = r, old_r - quotient * r
+        old_s, s = s, old_s - quotient * s
+
+    if old_r != 1:
+        return -1
+
+    return old_s % p
+
+
+def is_on_curve(point, curve):
+    if point is INF:
+        return True
+
+    x, y = point
+    left = (y * y) % curve.p
+    right = (x * x * x + curve.a * x + curve.b) % curve.p
+    return left == right
+
+
+# we do not need two different functions for point addition and doubling since code would be the same
+def point_add(p1, p2, curve):
+
+    if p1 is INF:
+        return p2
+    if p2 is INF:
+        return p1
+
+    x1, y1 = p1
+    x2, y2 = p2
+
+    if x1 == x2 and (y1 + y2) % curve.p == 0:
+        return INF
+
+    if p1 == p2:
+        #if we only have one point, we use the tangent line using the derivative
+        slope_top = 3 * x1 * x1 + curve.a
+        slope_bottom = 2 * y1
+    else:
+        slope_top = y2 - y1
+        slope_bottom = x2 - x1
+
+    # since the slope is a fraction, in a finite field of integers we need to use the modular inverse
+    slope = (slope_top * mod_inverse(slope_bottom, curve.p)) % curve.p
+    x3 = (slope * slope - x1 - x2) % curve.p
+    y3 = (slope * (x1 - x3) - y1) % curve.p
+    return (x3, y3)
+
+
+def scalar_multiply(k, point, curve):
+    result = INF
+    addend = point
+
+    # this uses the double and algorithm in o(n) where n = log2(k)
+    # from https://www.youtube.com/watch?v=u1VRbo_fhC8&list=PLxP0p--aBHmIAeOBX1lkpTn-wAbAimg8-&index=4
+
+    while k:
+        if k & 1:
+            result = point_add(result, addend, curve)
+        addend = point_add(addend, addend, curve)
+        k >>= 1
+
+    return result
+
+
+def main():
+    # change these to test different curves and keys
+    curve = Curve(p=17, a=2, b=2)
+    generator = (5, 1)
+    private_key = 7
+    
+    public_key = scalar_multiply(private_key, generator, curve)
+
+    print(f"Curve: y^2 = x^3 + {curve.a}x + {curve.b} mod {curve.p}")
+    print(f"Generator G: {generator}")
+    print(f"Is G on curve? {is_on_curve(generator, curve)}")
+
+    
+    print(f"Private key k: {private_key}")
+    print(f"Public key Q = kG: {public_key}")
+
+    print("\nFirst 10 multiples of G:")
+    for k in range(10):
+        print(f"{k}G = {scalar_multiply(k, generator, curve)}")
+
+main()
