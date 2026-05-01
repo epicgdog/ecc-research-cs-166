@@ -203,5 +203,4 @@ def plot_scalar_multiplication_ff(generator, k, curve, point_add, ax=None):
         f"Scalar multiplication on y² = x³ + {curve.a}x + {curve.b}"
         f" (mod {curve.p})"
     )
-    ax.legend(loc="upper right", fontsize=9)
     return ax
