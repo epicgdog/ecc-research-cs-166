@@ -5,7 +5,6 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>notebook</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
-    body { max-width: 60vw; margin: auto }
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -8535,7 +8534,7 @@ Public key  (Q = k·G): (0, 197)
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ecdh-logan-jake">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=0a6b2c0f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8543,30 +8542,38 @@ Public key  (Q = k·G): (0, 197)
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="ECC-Diffie-Hellman">ECC Diffie-Hellman<a class="anchor-link" href="#ECC-Diffie-Hellman">¶</a></h3><hr/>
 <p>Diffie-Hellman lets two people create the same shared secret without sending that secret directly.</p>
-<p>The main operation with elliptic curves is point multiplication: <strong>private number * generator point = public key</strong>.</p>
-<h4>Example</h4>
-<p>Lets say there was a sneak man in the middle named John and he wanted to find out a key that was being disbursed between John and Logan</p>
-<pre><code>curve = Curve(p=17, a=2, b=2)
-generator = (5, 1)
-
-logan_private = 7
-jake_private = 11
-
-logan_public = 7G
-jake_public = 11G
-
-<p>Logan keeps <code>7</code> secret. Jake keeps <code>11</code> secret. They share only their public keys.</p></code></pre>
-<p>John is in the middle watching... </p> 
-</p>He can see the generator point, Logan's public key, and Jake's public key. Even with this information he cannot figure out either private number.</p>
-<p>Thus, he cannot figure out the shared secret.</p>
-<pre><code>logan_shared = logan_private * jake_public
-jake_shared = jake_private * logan_public</code></pre>
-<p>These become the same point because:</p>
-<pre><code>logan_shared = 7 * (11G) = 77G
-jake_shared = 11 * (7G) = 77G</code></pre>
-<p>Logan and Jake reach the same answer. John only sees <code>G</code>, <code>logan_public</code>, and <code>jake_public</code>, so he would have to work backward from the public points to guess the private numbers.</p>
-
-<p> <strong>Real ECC uses much larger numbers.</strong></p>
+<p>The main operation with elliptic curves is point multiplication:</p>
+<blockquote>
+<p><strong>Private Number ($d$) * Generator Point ($G$) = Public Key ($Q$)</strong></p>
+</blockquote>
+<hr/>
+<h4 id="Example">Example<a class="anchor-link" href="#Example">¶</a></h4><p>Imagine a "man-in-the-middle" named <strong>John</strong> is attempting to intercept a key being established between <strong>Logan</strong> and <strong>Jake</strong>.</p>
+<p><strong>1. The Parameters</strong></p>
+<ul>
+<li><strong>Curve:</strong> $p=17, a=2, b=2$</li>
+<li><strong>Generator Point ($G$):</strong> $(5, 1)$</li>
+</ul>
+<p><strong>2. The Private &amp; Public Keys</strong></p>
+<ul>
+<li><strong>Logan's Private Key:</strong> <code>7</code> (Secret)</li>
+<li><strong>Jake's Private Key:</strong> <code>11</code> (Secret)</li>
+</ul>
+<p>Logan computes his public key:
+<code>logan_public = 7G</code></p>
+<p>Jake computes his public key:
+<code>jake_public = 11G</code></p>
+<p><strong>3. The Exchange</strong>
+Logan and Jake share their public keys openly. <strong>John</strong> sees $G$, <code>7G</code>, and <code>11G</code>. However, he cannot figure out the private numbers <code>7</code> or <code>11</code> because reversing point multiplication is computationally "hard" (the Discrete Logarithm Problem).</p>
+<p><strong>4. The Shared Secret</strong>
+Logan and Jake multiply their own private keys by the other person's public key:</p>
+<ul>
+<li><strong>Logan's Shared Secret:</strong> <code>7 * (11G)</code> = <strong>77G</strong></li>
+<li><strong>Jake's Shared Secret:</strong> <code>11 * (7G)</code> = <strong>77G</strong></li>
+</ul>
+<p>Because $7 \times 11 = 11 \times 7$, they both arrive at the same point on the curve. John is left with only the public pieces and cannot derive <strong>77G</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> Real ECC uses much larger numbers to ensure that guessing the private key is impossible with current technology.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8584,10 +8591,6 @@ jake_shared = 11 * (7G) = 77G</code></pre>
 <p>Advanced Maths, "Elliptic Curve #1: Fascinating Elliptic Curves -- Why we need them?," YouTube, May 19, 2020. [Online]. Available: <a href="https://www.youtube.com/watch?v=Q4X4OZTwftg">https://www.youtube.com/watch?v=Q4X4OZTwftg</a> (Accessed: May 3, 2026).</p>
 <ul>
 <li>really good youtube playlist to get this all down.</li>
-</ul>
-<p>Computerphile, "Diffie-Hellman Key Exchange," YouTube. [Online]. Available: <a href="https://www.youtube.com/watch?v=F3zzNa42-tQ&amp;t=60s">https://www.youtube.com/watch?v=F3zzNa42-tQ&amp;t=60s</a> (Accessed: May 4, 2026).</p>
-<ul>
-<li>used for understanding the Diffie-Hellman key exchange.</li>
 </ul>
 </div>
 </div>
