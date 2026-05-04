@@ -129,7 +129,7 @@ def main():
     for k in range(10):
         print(f"{k}G = {scalar_multiply(k, generator, curve)}")
 
-    diffie_hellman_demo(curve, generator)
+    diffie_hellman(curve, generator)
 
 if __name__ == "__main__":
     main()
