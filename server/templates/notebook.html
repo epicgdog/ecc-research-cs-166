@@ -8535,6 +8535,42 @@ Public key  (Q = k·G): (0, 197)
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ecdh-logan-jake">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="ECC-Diffie-Hellman">ECC Diffie-Hellman<a class="anchor-link" href="#ECC-Diffie-Hellman">¶</a></h3><hr/>
+<p>Diffie-Hellman lets two people create the same shared secret without sending that secret directly.</p>
+<p>The main operation with elliptic curves is point multiplication: <strong>private number * generator point = public key</strong>.</p>
+<h4>Example</h4>
+<p>Lets say there was a sneak man in the middle named John and he wanted to find out a key that was being disbursed between John and Logan</p>
+<pre><code>curve = Curve(p=17, a=2, b=2)
+generator = (5, 1)
+
+logan_private = 7
+jake_private = 11
+
+logan_public = 7G
+jake_public = 11G
+
+<p>Logan keeps <code>7</code> secret. Jake keeps <code>11</code> secret. They share only their public keys.</p></code></pre>
+<p>John is in the middle watching... </p> 
+</p>He can see the generator point, Logan's public key, and Jake's public key. Even with this information he cannot figure out either private number.</p>
+<p>Thus, he cannot figure out the shared secret.</p>
+<pre><code>logan_shared = logan_private * jake_public
+jake_shared = jake_private * logan_public</code></pre>
+<p>These become the same point because:</p>
+<pre><code>logan_shared = 7 * (11G) = 77G
+jake_shared = 11 * (7G) = 77G</code></pre>
+<p>Logan and Jake reach the same answer. John only sees <code>G</code>, <code>logan_public</code>, and <code>jake_public</code>, so he would have to work backward from the public points to guess the private numbers.</p>
+
+<p> <strong>Real ECC uses much larger numbers.</strong></p>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=478463ee">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8548,6 +8584,10 @@ Public key  (Q = k·G): (0, 197)
 <p>Advanced Maths, "Elliptic Curve #1: Fascinating Elliptic Curves -- Why we need them?," YouTube, May 19, 2020. [Online]. Available: <a href="https://www.youtube.com/watch?v=Q4X4OZTwftg">https://www.youtube.com/watch?v=Q4X4OZTwftg</a> (Accessed: May 3, 2026).</p>
 <ul>
 <li>really good youtube playlist to get this all down.</li>
+</ul>
+<p>Computerphile, "Diffie-Hellman Key Exchange," YouTube. [Online]. Available: <a href="https://www.youtube.com/watch?v=F3zzNa42-tQ&amp;t=60s">https://www.youtube.com/watch?v=F3zzNa42-tQ&amp;t=60s</a> (Accessed: May 4, 2026).</p>
+<ul>
+<li>used for understanding the Diffie-Hellman key exchange.</li>
 </ul>
 </div>
 </div>
