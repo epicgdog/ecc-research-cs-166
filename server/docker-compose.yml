@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: ecc-research
     image: python:3.11-slim
     working_dir: /app
     environment:
