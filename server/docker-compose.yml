@@ -1,0 +1,28 @@
+services:
+  web:
+    image: python:3.11-slim
+    working_dir: /app
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+      PIP_ROOT_USER_ACTION: ignore
+    volumes:
+      - .:/app
+      - pip-cache:/root/.cache/pip
+    ports:
+      - "5000:5000"
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt &&
+             exec gunicorn --bind 0.0.0.0:5000 main:app"
+    restart: unless-stopped
+    networks: 
+      - default
+      - npm_default
+
+networks:
+    npm_default:
+       external: true
+
+
+volumes:
+  pip-cache:
